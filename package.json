@@ -1,0 +1,48 @@
+{
+  "name": "@tiwz/fontawesome",
+  "version": "1.0.0",
+  "description": "Download and self-host Font Awesome assets for Next.js, Vite, and React projects.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Phiraphan Tanan",
+  "homepage": "https://github.com/TiwPhiraphan/fontawesome",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TiwPhiraphan/fontawesome.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TiwPhiraphan/fontawesome/issues"
+  },
+  "keywords": [
+    "fontawesome",
+    "font-awesome",
+    "nextjs",
+    "vite",
+    "react",
+    "self-hosted",
+    "icons",
+    "webfonts"
+  ],
+  "bin": {
+    "init": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "bun build.ts"
+  },
+  "devDependencies": {
+    "@clack/prompts": "^1.4.0",
+    "@octokit/rest": "^22.0.1",
+    "@types/bun": "latest",
+    "axios": "^1.16.0",
+    "picocolors": "^1.1.1",
+    "typescript": "^5"
+  }
+}
