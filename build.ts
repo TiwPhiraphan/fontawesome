@@ -1,6 +1,6 @@
 
 await Bun.build({
-    entrypoints: ['src/index.ts'],
+    entrypoints: ['src/free.ts', 'src/pro.ts'],
     outdir: 'dist',
     format: 'esm',
     target: 'node',
