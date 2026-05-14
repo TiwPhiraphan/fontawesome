@@ -6,11 +6,11 @@ import { outro, intro, log, spinner } from '@clack/prompts'
 import { writeFileSync, existsSync, mkdirSync } from 'node:fs'
 
 const proVersion = '5.15.4'
-const cssDir = resolveCssDir()
 const mediaDir = './public/assets/media'
 const isPro = process.argv.includes('--pro')
 const isNextApp = existsSync('./src/app') || existsSync('./app')
 const isNextPages = existsSync('./src/pages') || existsSync('./pages')
+const cssDir = resolveCssDir()
 
 function resolveCssDir() {
     if (isNextApp) return existsSync('./src/app') ? './src/app' : './app'
