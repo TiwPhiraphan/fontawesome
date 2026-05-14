@@ -1,6 +1,6 @@
 # @tiwz/fontawesome
 
-Download and self-host Font Awesome automatically.
+Download and self-host Font Awesome automatically for modern React frameworks.
 
 Supports:
 
@@ -9,7 +9,8 @@ Supports:
 - Vite
 - React
 
-## Usage
+## Installation
+### Free Version
 
 ```bash
 npx @tiwz/fontawesome
@@ -21,21 +22,42 @@ or
 bunx @tiwz/fontawesome
 ```
 
+### Pro Version
+
+```bash
+npx @tiwz/fontawesome --pro
+```
+
+or
+
+```bash
+bunx @tiwz/fontawesome --pro
+```
+
 ## Output
+
+### Next.js App Router
 
 ```txt
 public/assets/media/*
 src/app/fontawesome.css
 ```
 
-or
+### Next.js Pages Router
 
 ```txt
 public/assets/media/*
 src/styles/fontawesome.css
 ```
 
-depending on your project structure.
+### Vite / React
+
+```txt
+public/assets/media/*
+src/fontawesome.css
+```
+
+Output path is detected automatically based on your project structure.
 
 ## Import CSS
 
@@ -56,6 +78,16 @@ import '@/styles/fontawesome.css'
 ```ts
 import './fontawesome.css'
 ```
+
+## Features
+
+- Automatically downloads latest Font Awesome Free release
+- Optimized CSS output
+- Removes unused font formats
+- Uses only `.woff2`
+- Self-hosted assets
+- Works with Next.js and Vite automatically
+- No runtime dependency
 
 ## License
 
