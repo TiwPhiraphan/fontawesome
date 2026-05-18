@@ -1,6 +1,6 @@
 {
   "name": "@tiwz/fontawesome",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Download and self-host Font Awesome assets for Next.js, Vite, and React projects.",
   "type": "module",
   "license": "MIT",
@@ -58,9 +58,9 @@
     "tsup": "^8.5.1"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "latest",
     "@fortawesome/free-brands-svg-icons": "latest",
-    "@fortawesome/free-regular-svg-icons": "latest",
-    "@fortawesome/free-solid-svg-icons": "latest"
+    "@fortawesome/free-regular-svg-icons": "latest"
   },
   "peerDependencies": {
     "react": ">=18"
