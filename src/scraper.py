@@ -14,7 +14,7 @@ PAGINATION_JS  = """
     }
 """
 REWRITE_TARGET = "{fas:{},far:{},fab:{}}"
-TIMEOUT_MS     = 50_000
+TIMEOUT_MS     = 120_000
 HEADLESS       = True
 OUT_FILE       = Path(__file__).parent.resolve() / "free.ts"
 MODEL_BYTES    = b"import { createElement } from 'react'\nimport type { CSSProperties } from 'react'\n\nconst metadata = {fas:{},far:{},fab:{}} as const\n\nexport const byPrefixAndName = {\n\tfas: metadata.fas,\n\tfar: metadata.far,\n\tfab: metadata.fab,\n}\n\ntype SizeOption =\n\t| 'xs' | 'sm' | 'lg'\n\t| '1x' | '2x' | '3x' | '4x' | '5x'\n\t| '6x' | '7x' | '8x' | '9x' | '10x'\n\ntype PullOption = 'left' | 'right'\ntype AnimationOption = 'spin' | 'pulse'\ntype RotateOption = '90' | '180' | '270'\ntype FlipOption = 'horizontal' | 'vertical' | 'both'\n\ntype IconProps = {\n\ticon: string\n\tsize?: SizeOption\n\tfixedWidth?: boolean\n\tanimation?: AnimationOption\n\trotate?: RotateOption\n\tflip?: FlipOption\n\tpull?: PullOption\n\tborder?: boolean\n\tinverse?: boolean\n\tstack?: '1x' | '2x'\n\tclassName?: string\n\tstyle?: CSSProperties\n\ttitle?: string\n\t'aria-hidden'?: boolean\n\t'aria-label'?: string\n}\n\nexport function FontAwesomeIcon({\n\ticon,\n\tsize,\n\tfixedWidth,\n\tanimation,\n\trotate,\n\tflip,\n\tpull,\n\tborder,\n\tinverse,\n\tstack,\n\tclassName,\n\t...rest\n}: IconProps) {\n\tif (!icon) return null\n\tconst classes = [\n\t\ticon,\n\t\tsize && `fa-${size}`,\n\t\tfixedWidth && 'fa-fw',\n\t\tanimation && `fa-${animation}`,\n\t\trotate && `fa-rotate-${rotate}`,\n\t\tflip && `fa-flip-${flip}`,\n\t\tpull && `fa-pull-${pull}`,\n\t\tborder && 'fa-border',\n\t\tinverse && 'fa-inverse',\n\t\tstack && `fa-stack-${stack}`,\n\t\tclassName,\n\t].filter(Boolean).join(' ')\n\treturn createElement('i', {\n\t\tclassName: classes,\n\t\t...rest,\n\t})\n}\n"
@@ -75,7 +75,13 @@ def log_summary(Icons: dict):
 
 async def init_browser(headless: bool = True):
     p = await async_playwright().start()
-    browser = await p.chromium.launch(headless=headless)
+    browser = await p.chromium.launch(
+        headless=headless,
+        args=[
+            "--disable-blink-features=AutomationControlled",
+            "--no-sandbox",
+        ]
+    )
     context = await browser.new_context(
         viewport={"width": 1440, "height": 900},
         extra_http_headers={"Referer": "https://fontawesome.com/"},
@@ -85,7 +91,7 @@ async def init_browser(headless: bool = True):
             "Chrome/124.0.0.0 Safari/537.36"
         )
     )
-    return browser, context
+    return p, browser, context
 
 # ── Scraping ───────────────────────────────────────────────────────────────────
 
@@ -101,7 +107,6 @@ async def get_content(target: str, context: BrowserContext, count: bool = False)
         if count:
             await page.wait_for_selector(PAGINATION, timeout=TIMEOUT_MS)
         await page.wait_for_selector(ICON_LIST_SEL, timeout=TIMEOUT_MS)
-        await page.wait_for_load_state("networkidle", timeout=TIMEOUT_MS)
         if count:
             page_count = await page.evaluate(PAGINATION_JS)
         class_names: list[str] = await page.eval_on_selector_all(
@@ -164,7 +169,7 @@ async def main():
     print()
 
     log_info("Launching browser …")
-    browser, context = await init_browser(HEADLESS)
+    page, browser, context = await init_browser(HEADLESS)
     log_ok("Browser ready")
     print()
 
@@ -175,6 +180,7 @@ async def main():
         log_error("Could not determine page count. Aborting.")
         await context.close()
         await browser.close()
+        await page.stop()
         sys.exit(1)
 
     log_ok(f"Found {BOLD}{page_count}{RESET} pages")
@@ -194,6 +200,7 @@ async def main():
 
     await context.close()
     await browser.close()
+    await page.stop()
     log_ok("Browser closed")
     print()
 
