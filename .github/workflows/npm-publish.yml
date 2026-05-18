@@ -22,8 +22,19 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: Install Deps
+      - name: Install deps
         run: bun install
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install scraper deps
+        run: pip install -r requirements.txt
+      - name: Install Chromium
+        run: playwright install --with-deps chromium
+      - name: Scrape FontAwesome icons
+        run: python src/scraper.py
       - name: Build component
         run: bun run build
       - name: Publish package
