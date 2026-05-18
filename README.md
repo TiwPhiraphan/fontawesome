@@ -97,7 +97,7 @@ export default function App() {
 }
 ```
 
-> Find free icons, [click here](https://fontawesome.com/search)
+> Find free icons, [click here](https://fontawesome.com/search?ic=free-collection)
 
 `byPrefixAndName.fas`, `.far`, and `.fab` are fully typed — your editor will autocomplete icon names as you type.
 
