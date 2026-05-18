@@ -1,0 +1,43 @@
+name: Publish package
+permissions:
+  id-token: write
+on:
+  release:
+    types: [published]
+defaults:
+  run:
+    shell: bash
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+          registry-url: 'https://registry.npmjs.org'
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install deps
+        run: bun install
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install scraper deps
+        run: pip install -r requirements.txt
+      - name: Install Chromium
+        run: playwright install --with-deps chromium
+      - name: Scrape FontAwesome icons
+        run: python src/scraper.py
+      - name: Build component
+        run: bun run build
+      - name: Publish package
+        run: npm publish --provenance --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
