@@ -7,12 +7,7 @@ const options: Options = {
     minify: true,
     bundle: false,
     splitting: true,
-    external: [
-        'react',
-        '@fortawesome/free-solid-svg-icons',
-        '@fortawesome/free-regular-svg-icons',
-        '@fortawesome/free-brands-svg-icons',
-    ]
+    external: ['react']
 }
 
 await build({ ...options, entry: ['src/*.ts'], outDir: 'dist', })
